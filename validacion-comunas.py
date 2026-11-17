@@ -1,3 +1,5 @@
+import unicodedata
+
 # Lista de comunas de la Región Metropolitana
 comunas = [
     "Santiago", "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque",
@@ -14,18 +16,26 @@ comunas = [
     "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"
 ]
 
-# Versión en minúsculas de la lista, para comparar sin importar mayúsculas
-comunas_lower = [c.lower() for c in comunas]
+# Función que normaliza un texto: quita tildes/acentos y pasa a minúsculas
+def normalizar(texto):
+    # NFKD separa las letras de sus acentos (ej: "á" -> "a" + acento suelto)
+    texto_descompuesto = unicodedata.normalize("NFKD", texto)
+    # Nos quedamos solo con los caracteres que NO son marcas de acento (combining marks)
+    texto_sin_acentos = "".join(
+        caracter for caracter in texto_descompuesto if not unicodedata.combining(caracter)
+    )
+    return texto_sin_acentos.lower().strip()
+
+# Versión normalizada de la lista, para comparar sin tildes ni mayúsculas
+comunas_normalizadas = [normalizar(c) for c in comunas]
 
 # Bucle para pedir al usuario la comuna y validarla
 comuna_valida = False
 while not comuna_valida:
-    # Pedimos la comuna y la normalizamos: quitamos espacios y pasamos a minúsculas
-    comuna = input("Ingrese el nombre de la comuna: ").strip()
-    comuna_normalizada = comuna.lower()
+    comuna = input("Ingrese el nombre de la comuna: ")
+    comuna_normalizada = normalizar(comuna)
 
-    # Comparamos la versión normalizada contra la lista normalizada
-    if comuna_normalizada in comunas_lower:
+    if comuna_normalizada in comunas_normalizadas:
         print("La comuna ingresada es correcta")
         comuna_valida = True
     else:
