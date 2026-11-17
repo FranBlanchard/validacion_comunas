@@ -14,14 +14,18 @@ comunas = [
     "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"
 ]
 
+# Versión en minúsculas de la lista, para comparar sin importar mayúsculas
+comunas_lower = [c.lower() for c in comunas]
+
 # Bucle para pedir al usuario la comuna y validarla
 comuna_valida = False
 while not comuna_valida:
-    # Pedir al usuario la comuna
-    comuna = input("Ingrese el nombre de la comuna: ")
+    # Pedimos la comuna y la normalizamos: quitamos espacios y pasamos a minúsculas
+    comuna = input("Ingrese el nombre de la comuna: ").strip()
+    comuna_normalizada = comuna.lower()
 
-    # Verificar si la comuna es válida
-    if comuna in comunas:
+    # Comparamos la versión normalizada contra la lista normalizada
+    if comuna_normalizada in comunas_lower:
         print("La comuna ingresada es correcta")
         comuna_valida = True
     else:
